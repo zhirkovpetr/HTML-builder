@@ -9,96 +9,90 @@ const pathAssetsSrc = path.join(__dirname, 'assets');
 const pathAssetsDest = path.join(__dirname, 'project-dist', 'assets');
 
 
-function allSaveHtml() {
-  fs.readFile(pathTemplate, 'utf8', (err, html) => {
-    if (err) throw err;
-    fs.readdir(pathComponents, (err, items) => {
-      if (err) throw err;
-      for (let i = 0; i < items.length; i++) {
-        if (path.extname(items[i]) === '.html') {
-          let name = items[i].split('.')[0];
+function copyAllHtml() {
+  fs.readFile(pathTemplate, 'utf8', (error, html) => {
+    if (handleError(error)) return;
+    fs.readdir(pathComponents, (error, items) => {
+      if (handleError(error)) return;
+      items.forEach((item) => {
+        if (path.extname(item) === '.html') {
+          let name = item.split('.')[0];
           const templateNameRe = new RegExp(`{{${name}}}`);
 
-          fs.readFile(path.join(pathComponents, items[i]), 'utf8', (err, data) => {
-            if (err) throw err;
+          fs.readFile(path.join(pathComponents, item), 'utf8', (error, data) => {
+            if (handleError(error)) return;
 
             html = html.replace(templateNameRe, data);
 
-            fs.writeFile(path.join(pathDirectory, 'index.html'), html, (err) => {
-              if (err) throw err;
+            fs.writeFile(path.join(pathDirectory, 'index.html'), html, (error) => {
+              if (handleError(error)) return;
             });
           });
         }
+      });
+    });
+  });
+}
+
+function copyAllStyles() {
+  fs.readdir(pathStyles, (error, items) => {
+    if (handleError(error)) return;
+    items.forEach((item) => {
+      if (path.extname(item) === '.css') {
+        fs.readFile(path.join(pathStyles, item), (error, data) => {
+          if (handleError(error)) return;
+          fs.appendFile(pathCss, data, (error) => {
+            if (handleError(error)) return;
+          });
+        });
       }
     });
   });
 }
 
-
-function allSaveStyles() {
-  fs.readdir(pathStyles, (err, items) => {
-    if (err) throw err;
-
-    for (let i = 0; i < items.length; i++) {
-      if (path.extname(items[i]) === '.css') {
-        fs.readFile(path.join(pathStyles, items[i]), (err, data) => {
-          if (err) throw err;
-
-          fs.appendFile(pathCss, data, (err) => {
-            if (err) throw err;
-          });
-        });
-      }
-    }
-  });
-}
-
-function updateAllSaveStyles() {
+function updateAllStyles() {
   fs.unlink(pathCss, () => {
-    allSaveStyles();
+    copyAllStyles();
   });
 }
-
-
-
 
 function copyDirRecursively(src, dest, callback) {
   fs.readdir(src, handleReadSrcDir);
 
   function handleReadSrcDir(error, items) {
-    if(handleError(error)) return;
+    if (handleError(error)) return;
 
     fs.readdir(dest, handleReadDestDir);
 
 
     function copyItems() {
-      items.forEach((item)=> {
+      items.forEach((item) => {
         const itemPathSrc = path.join(src, item);
         const itemPathDest = path.join(dest, item);
-        fs.stat(itemPathSrc, (error, stats)=>{
-          if(handleError(error)) return;
+        fs.stat(itemPathSrc, (error, stats) => {
 
-          if(stats.isFile()){
-            fs.copyFile(itemPathSrc, itemPathDest, (error)=>{
-              if(handleError(error)) return;
+          if (handleError(error)) return;
 
-              console.log(`successes file copy ${item}`);
+          if (stats.isFile()) {
+            fs.copyFile(itemPathSrc, itemPathDest, (error) => {
+              if (handleError(error)) return;
             });
-          } else{
-            fs.mkdir(itemPathDest, ()=>copyDirRecursively(itemPathSrc, itemPathDest));
+          } else {
+            fs.mkdir(itemPathDest, () => copyDirRecursively(itemPathSrc, itemPathDest));
           }
         });
       });
     }
 
     function handleReadDestDir(error) {
-      if(handleError(error)) {
+      if (handleError(error)) {
         fs.mkdir(pathAssetsDest, {recursive: true}, copyItems);
       } else {
         copyItems();
       }
     }
   }
+
   callback && callback();
 }
 
@@ -107,18 +101,14 @@ function handleError(error) {
   return !!error;
 }
 
+/* Можно заменить одной строкой
+fs.cp('./assets', './project-dist/assets', {recursive: true}, ()=> {});*/
 
 
+fs.mkdir(pathDirectory, {recursive: true}, (error) => {
+  if (handleError(error)) console.error(error);
 
-
-
-// build page
-fs.mkdir(pathDirectory, {recursive: true}, (err) => {
-  if (err) {
-    return console.error(err);
-  }
-
-  allSaveHtml();
-  updateAllSaveStyles();
+  copyAllHtml();
+  updateAllStyles();
   copyDirRecursively(pathAssetsSrc, pathAssetsDest);
 });
