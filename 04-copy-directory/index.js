@@ -1,27 +1,62 @@
-const fs = require('fs/promises');
+const fs = require('fs');
 const path = require('path');
 const filesFolder = path.resolve(__dirname, 'files');
 const copyFilesFolder = path.join(__dirname, 'files-copy');
 
-async function copyFolder() {
-  try {
-    await fs.mkdir(copyFilesFolder);
-    console.log('Folder created');
-  } catch {
-    console.log('Folder not created');
-  }
-  try {
-    const file = await fs.readdir(filesFolder);
-    if (file.length === 0) {
-      console.log('Files not copied');
+function copyDirRecursively(src, dest, callback) {
+  fs.readdir(src, handleReadSrcDir);
+
+  function handleReadSrcDir(error, items) {
+    if (handleError(error)) return;
+
+    fs.readdir(dest, handleReadDestDir);
+
+
+    function copyItems() {
+      items.forEach((item) => {
+        const itemPathSrc = path.join(src, item);
+        const itemPathDest = path.join(dest, item);
+
+        fs.stat(itemPathSrc, (error, stats) => {
+
+          if (handleError(error)) return;
+
+          if (stats.isFile()) {
+            fs.copyFile(itemPathSrc, itemPathDest, (error) => {
+              if (handleError(error)) return;
+              console.log('Files copied');
+            });
+          } else {
+            fs.mkdir(itemPathDest, () => copyDirRecursively(itemPathSrc, itemPathDest));
+          }
+        });
+
+      });
     }
-    for (let i = 0; i < file.length; i++) {
-      await fs.copyFile(__dirname + `/files/${file[i]}`, __dirname + `/files-copy/${file[i]}`);
+
+    function handleReadDestDir(error) {
+      if (handleError(error)) {
+        fs.mkdir(copyFilesFolder, {recursive: true}, copyItems);
+
+      } else {
+        copyItems();
+      }
     }
-    console.log('Files copied');
-  } catch {
-    console.log('Error while copying files');
   }
+
+  callback && callback();
 }
 
-copyFolder();
+function handleError(error) {
+  error ? console.log(error) : null;
+  return !!error;
+}
+
+fs.mkdir(copyFilesFolder, {recursive: true}, (error) => {
+  if (handleError(error)) console.error(error);
+  copyDirRecursively(filesFolder, copyFilesFolder);
+  console.log('Folder created');
+});
+
+
+
