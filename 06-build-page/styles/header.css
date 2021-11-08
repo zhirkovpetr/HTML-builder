@@ -1,6 +1,7 @@
+
 @font-face {
   font-family: 'Karolina';
-  src: url('assets/fonts/Karolina-Regular.woff2') format('woff2');
+  src: url('../assets/fonts/Karolina-Regular.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -28,7 +29,7 @@ header {
 
 header .container {
   min-height: 780px;
-  background-image: url('assets/img/header.jpg');
+  background-image: url('../assets/img/header.jpg');
   background-size: cover;
   padding-top: 20px;
   box-shadow: -150px 0 150px -100px #02160b inset, 150px 0 150px -100px #02160b inset, -100px 0 100px -90px #02160b inset, 100px 0 100px -90px #02160b inset, -50px 0 50px -40px #02160b inset, 50px 0 50px -40px #02160b inset;
@@ -80,7 +81,7 @@ header .container {
 .logo-icon {
   width: 70px;
   height: 60px;
-  background-image: url('assets/svg/logo.svg');
+  background-image: url('../assets/svg/logo.svg');
   background-size: contain;
   background-position: left center;
   background-repeat: no-repeat;  
@@ -101,7 +102,7 @@ header .container {
 .search {
   width: 32px;
   height: 32px;
-  background-image: url('assets/svg/search.svg');
+  background-image: url('../assets/svg/search.svg');
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;  

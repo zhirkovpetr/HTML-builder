@@ -1,3 +1,4 @@
+
 main .container {
   padding-top: 120px;
   padding-bottom: 120px;
@@ -7,9 +8,8 @@ main .container {
   font-size: 48px;
   color: #333;
   text-align: center;
-  margin: 0;
   padding: 0;
-  margin-bottom: 20px;
+  margin: 0 0 20px;
 }
 
 .main-subtitle {
@@ -17,8 +17,7 @@ main .container {
   font-size: 24px;
   color: #666;
   text-align: center;
-  margin: 0;
-  margin-bottom: 120px;
+  margin: 0 0 120px;
   padding: 0;
 }
 
@@ -54,15 +53,15 @@ main .container {
 }
 
 .item1 {
-  background-image: url('assets/img/item1.jpg');
+  background-image: url('../assets/img/item1.jpg');
 }
 
 .item2 {
-  background-image: url('assets/img/item2.jpg');
+  background-image: url('../assets/img/item2.jpg');
 }
 
 .item3 {
-  background-image: url('assets/img/item3.jpg');
+  background-image: url('../assets/img/item3.jpg');
 }
 
 .item-title {
@@ -70,9 +69,8 @@ main .container {
   font-weight: 300;
   color: #f7f7f7;
   text-align: center;
-  margin: 0;
   padding: 0;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
 }
 
 .item-subtitle {
@@ -81,8 +79,7 @@ main .container {
   font-weight: 100;
   color: #f7f7f7;
   text-align: center;
-  margin: 0;
-  margin-bottom: 40px;
+  margin: 0 0 40px;
   padding: 0;
 }
 
@@ -107,11 +104,11 @@ main .container {
 }
 
 .arrow-left {
-  background-image: url('assets/svg/arrow-left.svg');
+  background-image: url('../assets/svg/arrow-left.svg');
 }
 
 .arrow-right {
-  background-image: url('assets/svg/arrow-right.svg');
+  background-image: url('../assets/svg/arrow-right.svg');
 }
 
 .mail-form {
@@ -122,8 +119,7 @@ main .container {
 
 .mail-title {
   padding: 0;
-  margin: 0;
-  margin-bottom: 60px;
+  margin: 0 0 60px;
   text-align: center;
   color: #333;
 }

@@ -105,7 +105,7 @@ function handleError(error) {
 fs.cp('./assets', './project-dist/assets', {recursive: true}, ()=> {});*/
 
 
-fs.mkdir(pathDirectory, {recursive: true}, (error) => {
+fs.mkdir(pathAssetsDest, {recursive: true}, (error) => {
   if (handleError(error)) console.error(error);
 
   copyAllHtml();
