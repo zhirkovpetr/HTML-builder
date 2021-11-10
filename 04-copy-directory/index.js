@@ -53,10 +53,23 @@ function handleError(error) {
 }
 
 fs.mkdir(copyFilesFolder, {recursive: true}, (error) => {
-  if (handleError(error)) console.error(error);
-  copyDirRecursively(filesFolder, copyFilesFolder);
-  console.log('Folder created');
+  if (handleError(error)) {
+    console.error(error);
+    copyDirRecursively(filesFolder, copyFilesFolder);
+    console.log('Folder created');
+  } else {
+    removeDir(createDir);
+  }
 });
 
+function createDir() {
+  fs.mkdir(copyFilesFolder, { recursive: true }, () => {});
+  copyDirRecursively(filesFolder, copyFilesFolder);
+}
 
-
+function removeDir(callback) {
+  fs.rm(copyFilesFolder, { recursive: true }, (err) => {
+    if (err) throw err;
+    callback();
+  });
+}
