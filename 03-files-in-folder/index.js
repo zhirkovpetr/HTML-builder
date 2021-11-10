@@ -11,7 +11,7 @@ async function getFiles() {
   for (let i = 0; i < files.length; i++) {
     const pathToFile = path.join(__dirname, `secret-folder/${files[i].name}`);
     const f = path.parse(pathToFile);
-    await fs.stat(pathToFile, (err, stats) => {
+    fs.stat(pathToFile, (err, stats) => {
       if (f.ext.length > 0 && files[i].isFile()) {
         console.log(`${f.name} - ${f.ext.substring(1)} - ${Math.ceil(stats.size / 1024)}kb`);
       }
